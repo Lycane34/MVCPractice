@@ -222,7 +222,7 @@ namespace MVCPractice.Controllers
         }
 
 
-        public JsonResult GetUserTableData()
+        public string GetUserTableData()
         {
             var users = (from u in LTE.Local_User
                          select new User_A_RViewModel
@@ -234,8 +234,9 @@ namespace MVCPractice.Controllers
                              CreateAt = u.CreateAt
                          }
                          ).OrderByDescending(m => m.CreateAt).ToList();
-
-            return Json(users, JsonRequestBehavior.AllowGet);
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(users);
+            return json;
+            //return Json(users, JsonRequestBehavior.AllowGet);
         }
     }
 

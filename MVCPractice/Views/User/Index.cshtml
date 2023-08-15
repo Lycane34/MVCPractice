@@ -5,45 +5,45 @@
 }
 <script>
 
-    function populateTable(data) {
-        var dataTable = $('#UsersTable').DataTable();
-        // Add the row to the DataTable
-
-    }
-
     // Load table data
     function loadTableData() {
+        var table = $('#UsersTable').DataTable();
+        table.destroy();
+
         $.ajax({
-            url: "/User/GetUserTableData", // Replace with your API endpoint
+            url: "/User/GetUserTableData",
             type: "GET",
             dataType: "json",
             success: function (data) {
-                var dataTable = $('#UsersTable').DataTable({
+                console.log("Calisti");
+                $('#UsersTable').DataTable({
                     data: data,
                     columns: [
                         { 'data': 'Name' },
-                        { 'data': 'JobStartDate' },
-                        { 'data': 'EmailAddress' }, 
-                        { 'data': 'Buttons'}
+                        {
+                            'data': 'JobStartDate', 'render': function (data, type, row) {
+                                return new Date(row.JobStartDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        { 'data': 'EmailAddress' },
+                        {
+                            'data': null,
+                            'render': function (data, type, row) {
+                                return '<button class="btn btn-danger ms-2" onclick="DeleteUser(' + row.ID + ')">Delete</button>' +
+                                    '<button class="btn btn-primary ms-2" onclick="EditUser(' + row.ID + ')">Edit</button>' +
+                                    '<button class="btn btn-warning ms-2" onclick="PopupUserDetails(' + row.ID + ')">Details</button>';
+                            }
+                        }
                     ],
                 });
-                data.forEach(function (item) {
-                    var jobStartDate = new Date(parseInt(item.JobStartDate.substr(6)));
-                    var rowData = [
-                        item.Name,
-                        jobStartDate.toLocaleDateString('tr-TR'),
-                        item.EmailAddress,
-                        '<button class="btn btn-danger ms-2" onclick="DeleteUser(' + item.ID + ')">Delete</button>' +
-                        '<button class="btn btn-primary ms-2" onclick="EditUser(' + item.ID + ')">Edit</button>' +
-                        '<button class="btn btn-warning ms-2" onclick="PopupUserDetails(' + item.ID + ')">Detaylar</button>'
-                    ];
-                    dataTable.row.add(rowData).draw();
-                })
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.error("Error fetching data:", thrownError);
             }
         });
+
+        
+       
     }
     function DeleteUser(userId) {
         Swal.fire({
@@ -64,10 +64,11 @@
                     url: "/User/DeleteUser/" + userId,
                     type: "POST",
                     dataType: "json",
+
                     success: function (data) {
                         Swal.fire({
                             title: 'Başarılı!',
-                            text: 'Kullanıcı ' + data.Name + ' başarıyla silindi.',
+                            text: 'Kullanıcı  başarıyla silindi.',
                             icon: 'success',
                             confirmButtonText: 'Tamam'
                         })
@@ -183,6 +184,7 @@
                         confirmButtonText: 'Tamam'
                     })
                     loadTableData();
+
                     EditForm();
                 }
                 else {
@@ -269,13 +271,19 @@
     };
     $(document).ready(function () {
         var table = $('#UsersTable').DataTable();
+
+        loadTableData();
+
+
+
+
         document.getElementById("cancelAddFormButton").addEventListener("click", function () {
             document.getElementById("AddForm").style.display = "none";
         });
         document.getElementById("cancelEditFormButton").addEventListener("click", function () {
             document.getElementById("EditForm").style.display = "none"
         });
-        loadTableData();
+
 
 
     });
