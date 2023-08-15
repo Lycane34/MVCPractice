@@ -1,0 +1,9 @@
+﻿/* Adjust the width of the popup */
+.swal2-popup {
+    width: 600px; /* Adjust the desired width */
+    height: 350px;
+    font-size: 14px;
+}
+
+/* Adjust the size of the content inside the popup */
+

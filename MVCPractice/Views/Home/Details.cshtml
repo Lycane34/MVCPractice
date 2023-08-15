@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Details"; ;
+}
+
+
+
+<meta charset=utf-8 />
+
+<script>
+
+    $(document).ready(function () {
+        var table = $('#Test').DataTable({
+
+        });
+
+
+        let minDate, maxDate;
+
+        // Custom filtering function which will search data in column four between two values
+        DataTable.ext.search.push(function (settings, data, dataIndex) {
+            let min = minDate.val();
+            let max = maxDate.val();
+            let date = new Date(data[2]);
+
+
+
+            if (
+                (min === null && max === null) ||
+                (min === null && date <= max) ||
+                (min <= date && max === null) ||
+                (min <= date && date <= max)
+            ) {
+                return true;
+            }
+            return false;
+        });
+
+        // Create date inputs
+        minDate = new DateTime('#min', {
+            format: 'YYYY MM DD'
+        });
+        maxDate = new DateTime('#max', {
+            format: 'YYYY MM DD'
+        });
+
+        // DataTables initialisation
+        //let table = new DataTable('#example');
+
+        // Refilter the table
+        document.querySelectorAll('#min, #max').forEach((el) => {
+            el.addEventListener('change', () => table.draw());
+        });
+    });
+
+
+
+
+</script>
+
+<main>
+    <table border="0" cellspacing="5" cellpadding="5">
+        <tbody>
+            <tr>
+                <td>Başlangıç Tarihi:</td>
+                <td><input type="text" id="min" name="min"></td>
+            </tr>
+            <tr>
+                <td>Bitiş Tarihi:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div id="tableExample" data-list='{"valueNames":["Isim-Soyisim","TypeID","Gidiş Tarihi","Dönüş Tarihi","Açıklama","Durum"],"page":5,"pagination":true}'>
+        <div class="table-responsive scrollbar">
+            <table id="Test" class="table table-bordered table-striped fs--1 mb-0">
+                <thead class="bg-200 text-900">
+                    <tr>
+                        <th class="sort" data-sort="Isim-Soyisim">Isim-Soyisim</th>
+                        <th class="sort" data-sort="TypeID">TypeID</th>
+                        <th class="sort" data-sort="GoingDate">GoingDate</th>
+                        <th class="sort" data-sort="ReturnDate">ReturnDate</th>
+                        <th class="sort" data-sort="Açıklama">Açıklama</th>
+                        <th class="sort" data-sort="Durum">Durum</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    @foreach (var item in ViewBag.oTest)
+                    {
+                        <tr>
+
+                            <td>@item.Name</td>
+                            <td>@item.TypeID</td>
+                            <td>@item.GoingDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.ReturnDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Description</td>
+                            <td>@item.Status</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+    <br />
+
+</main>
+
