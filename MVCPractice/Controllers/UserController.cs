@@ -102,7 +102,7 @@ namespace MVCPractice.Controllers
             entity.JobStartDate = new DateTime(2020, 3, 28);
             entity.OwnerID = 1032;
             entity.TaskID = 3010;
-            entity.TypeID = 690;
+            entity.TypeID = 1;
             LTE.Local_User.Add(entity);
             LTE.SaveChanges();
 

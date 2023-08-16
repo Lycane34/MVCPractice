@@ -3,3 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (User.Identity.IsAuthenticated)
+{
+    <p>@User.Identity.Name Hoşgeldiniz</p>
+}

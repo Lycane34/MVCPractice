@@ -3,6 +3,7 @@ using MVCPractice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -18,9 +19,13 @@ namespace MVCPractice.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginUserViewModel loginUserViewModel)
+        public ActionResult Authenticate(LoginUserViewModel loginUserViewModel)
         {
-                
+            if (!ModelState.IsValid)
+            {
+                return View("Index", loginUserViewModel); // Return to the same view with validation errors
+            }
+
             using (Local_TestEntities1 LTE = new Local_TestEntities1())
             {
                 bool IsValidUser = LTE.Local_User.Any(user => user.EmailAddress.ToLower() ==
@@ -32,11 +37,13 @@ namespace MVCPractice.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "invalid Email or Password");
-                    return View();
+                    ModelState.AddModelError("", "");
+                    return View("Index");
                 }
             }
+
         }
+
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();

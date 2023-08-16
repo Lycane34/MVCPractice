@@ -120,11 +120,17 @@
                         {
                             'data': null,
                             'render': function (data, type, row) {
-                                return '<a class="btn btn-sm btn-primary" href="/UserLeaveReqs/Details/' + row.ID + '">Details</a>' +
-                                    '<button class="btn btn-primary" data-toggle="modal" onclick="popupButton(' + row.ID + ')" data-target="#Modal1">Detayları Görüntüle</button>'
+                                return '<a class="btn btn-primary" href="/UserLeaveReqs/Details/' + row.ID + '">Details</a>'
 
                             }
-                        }
+                        },
+                        {
+                            'data': null,
+                            'render': function (data, type, row) {
+                                return '<button class="btn btn-primary" data-toggle="modal" onclick="popupButton(' + row.ID + ')" data-target="#Modal1">Detayları Görüntüle</button>'
+
+                            }
+}
                     ],
                 });
             },

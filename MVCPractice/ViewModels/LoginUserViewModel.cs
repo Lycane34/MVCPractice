@@ -10,12 +10,18 @@ namespace MVCPractice.ViewModels
     {
 
         [Required(ErrorMessage = "Email Giriniz.")]
+        [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi veya şifre giriniz.")]
+
 
         public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "Şifre Giriniz.")]
+        [DataType(DataType.Password)]
+
 
         public string Password { get; set; }
+
+        public int UserType { get; set; }
 
     }
 }
