@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "İzinler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main>
+    <div id="tableExample" data-list='{"valueNames":["Isim-Soyisim","Ise Baslama Tarihi","Bu yil kullanilan izin","Bu yil kalan izin","Toplam Kullanilan Izin","Calistigi Yil"],"page":5,"pagination":true}'>
+        <div class="table-responsive scrollbar">
+            <table id="IndexTableID" class="table table-bordered table-striped fs--1 mb-0">
+                <thead class="bg-200 text-900">
+                    <tr>
+                        <th>Isim-Soyisim</th>
+                        <th>Ise Baslama Tarihi</th>
+                        <th>Bu yil kullanilan izin(2022)</th>
+                        <th>Bu yil kalan izin(2022)</th>
+                        <th>Toplam Kullanilan Izin Sayisi</th>
+                        <th>Calistigi Yil</th>
+                        <th>Detaylar</th>
+                        <th>Popup Detaylar</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                </tbody>
+
+            </table>
+
+
+            <div class="row align-items-center mt-3">
+                <div class="pagination d-none"></div>
+                <div class="col">
+                    <p class="mb-0 fs--1">
+                        <span class="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
+                        <span class="d-none d-sm-inline-block"> &mdash;</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="Modal1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <table id="popupWID" class="table table-bordered table-striped fs--1 mb-0">
+                            <thead class="bg-200 text-900">
+                                <tr>
+                                    <th class="sort" data-sort="Isim-Soyisim">Isim-Soyisim</th>
+                                    <th class="sort" data-sort="TypeID">TypeID</th>
+                                    <th class="sort" data-sort="GoingDate">GoingDate</th>
+                                    <th class="sort" data-sort="ReturnDate">ReturnDate</th>
+                                    <th class="sort" data-sort="Açıklama">Açıklama</th>
+                                    <th class="sort" data-sort="Durum">Durum</th>
+                                </tr>
+                            <tbody class="list">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form></form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function popupButton(userId) {
+        $.ajax({
+            url: "/UserLeaveReqs/DetailsPopUp",
+            method: "POST",
+            data: {
+                id: userId
+
+            },
+
+            success: function (data) {
+                let jsonData = JSON.parse(data)
+                var len = jsonData.length
+                var tbodyContent
+                for (var i = 0; i < len; i++) {
+                    var Name = jsonData[i].Name;
+                    var TypeID = jsonData[i].TypeID;
+                    var GoingDate = new Date(jsonData[i].GoingDate).toLocaleDateString('tr-TR');
+                    var ReturnDate = new Date(jsonData[i].ReturnDate).toLocaleDateString('tr-TR');
+                    var Description = jsonData[i].Description;
+                    var Status = jsonData[i].Status;
+                    tbodyContent += '<tr><td>' + Name + '</td><td>' + TypeID + '</td><td>' + GoingDate + '</td><td>' + ReturnDate + '</td><td>' + Description + '</td><td>' + Status + '</td></tr>';
+                }
+
+                // Yeni içerik stringini tbody'ye ata
+                $('#popupWID tbody').html(tbodyContent);
+
+
+            },
+            error: function (err) {
+                console.log("basarisiz" + err);
+            }
+        })
+    }
+    var table = new DataTable('#IndexTableID')
+    $(document).ready(function () {
+        table.destroy();
+        $.ajax({
+            url: "/UserLeaveReqs/ALRUsers",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                $('#IndexTableID').DataTable({
+                    data: data,
+                    columns: [
+                        { 'data': 'Name' },
+                        {
+                            'data': 'JobStartDate', 'render': function (data, type, row) {
+                                return new Date(row.JobStartDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        { 'data': 'AnnualDayLeft' },
+                        { 'data': 'AnnualDayUsed' },
+                        { 'data': 'TotalAnnualDayUsed' },
+                        {'data': 'YearsWorked'},
+                        {
+                            'data': null,
+                            'render': function (data, type, row) {
+                                return '<a class="btn btn-sm btn-primary" href="/UserLeaveReqs/Details/' + row.ID + '">Details</a>' +
+                                    '<button class="btn btn-primary" data-toggle="modal" onclick="popupButton(' + row.ID + ')" data-target="#Modal1">Detayları Görüntüle</button>'
+
+                            }
+                        }
+                    ],
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.error("Error fetching data:", thrownError);
+            }
+        });
+
+      
+    })
+</script>

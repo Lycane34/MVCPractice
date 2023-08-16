@@ -22,11 +22,7 @@ namespace MVCPractice
             );
 
 
-            routes.MapRoute(
-                name:"DatePicker",
-                url: "DatePicker",
-                defaults: new {controller = "DatePicker", action="Index"}
-                );
+          
         }
     }
 }

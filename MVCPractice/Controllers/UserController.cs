@@ -14,16 +14,15 @@ using System.Collections;
 
 namespace MVCPractice.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
 
-
-
-
-
         Local_TestEntities1 LTE = new Local_TestEntities1();
+        [AllowAnonymous]
         public ActionResult Index()
         {
+
 
             return View();
         }
@@ -93,6 +92,7 @@ namespace MVCPractice.Controllers
             entity.AccountNumber = "0";
             entity.IdentityNumber = "12345678910";
             entity.IsPersonel = true;
+            entity.IsActive = true;
             entity.IsWarehouse = false;
             entity.BankaKodu = 0;
             entity.Birthdate = new DateTime(2001, 12, 30);
@@ -116,9 +116,10 @@ namespace MVCPractice.Controllers
             try
             {
                 var userToDelete = LTE.Local_User.Find(id);
-                if (userToDelete != null)
+               
+                if (userToDelete != null && userToDelete.IsActive != false)
                 {
-                    LTE.Local_User.Remove(userToDelete);
+                    userToDelete.IsActive = false;
                     LTE.SaveChanges();
 
                     return Json(new { success = true, message = "User deleted successfully." });
@@ -139,7 +140,7 @@ namespace MVCPractice.Controllers
             try
             {
                 var userData = LTE.Local_User.Find(id);
-                if (userData != null)
+                if (userData != null && userData.IsActive != false)
                 {
                     return Json(new { success = true, data = userData }, JsonRequestBehavior.AllowGet);
                 }
@@ -161,7 +162,7 @@ namespace MVCPractice.Controllers
             try
             {
                 var existingUser = LTE.Local_User.Find(editedUser.ID);
-                if (existingUser != null)
+                if (existingUser != null && existingUser.IsActive != false)
                 {
                     if (LTE.Local_User.Any(u => u.EmailAddress.ToLower() == editedUser.EmailAddress.ToLower() && u.ID != editedUser.ID))
                     {
@@ -206,7 +207,7 @@ namespace MVCPractice.Controllers
             try
             {
                 var userData = LTE.Local_User.Find(id);
-                if (userData != null)
+                if (userData != null && userData.IsActive != false)
                 {
                     return Json(new { success = true, data = userData });
                 }
@@ -225,6 +226,7 @@ namespace MVCPractice.Controllers
         public string GetUserTableData()
         {
             var users = (from u in LTE.Local_User
+                         where u.IsActive == true
                          select new User_A_RViewModel
                          {
                              ID = u.ID,

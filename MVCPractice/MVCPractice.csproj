@@ -130,7 +130,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserLeaveReqsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,8 +180,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\CreateUserViewModel.cs" />
+    <Compile Include="ViewModels\LoginUserViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
-    <Compile Include="ViewModels\DatePickerViewModel.cs" />
     <Compile Include="ViewModels\User_A_RViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -330,10 +332,11 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\DetailsPopUp.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\UserLeaveReqs\Index.cshtml" />
+    <Content Include="Views\UserLeaveReqs\Details.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
