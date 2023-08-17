@@ -19,7 +19,7 @@ namespace MVCPractice.Controllers
     {
 
         Local_TestEntities1 LTE = new Local_TestEntities1();
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public ActionResult Index()
         {
 
@@ -116,7 +116,7 @@ namespace MVCPractice.Controllers
             try
             {
                 var userToDelete = LTE.Local_User.Find(id);
-               
+
                 if (userToDelete != null && userToDelete.IsActive != false)
                 {
                     userToDelete.IsActive = false;
@@ -157,7 +157,7 @@ namespace MVCPractice.Controllers
 
         [HttpPost]
         public JsonResult UpdateUser(CreateUserViewModel editedUser)
-        {   
+        {
             var editErrorMessages = new List<string>();
             try
             {
@@ -168,15 +168,15 @@ namespace MVCPractice.Controllers
                     {
                         editErrorMessages.Add("Bu Email zaten kullanılıyor.");
                     }
-                    if(LTE.Local_User.Any(u => u.Username.ToLower() == editedUser.Username.ToLower() && u.ID != editedUser.ID))
+                    if (LTE.Local_User.Any(u => u.Username.ToLower() == editedUser.Username.ToLower() && u.ID != editedUser.ID))
                     {
                         editErrorMessages.Add("Bu Kullanıcı Adı zaten kullanılıyor.");
                     }
-                    if(LTE.Local_User.Any(u => u.Phone == editedUser.Phone && u.ID != editedUser.ID))
+                    if (LTE.Local_User.Any(u => u.Phone == editedUser.Phone && u.ID != editedUser.ID))
                     {
                         editErrorMessages.Add("Bu Telefon Numarası zaten kullanılıyor.");
                     }
-                    if(editErrorMessages.Count > 0)
+                    if (editErrorMessages.Count > 0)
                     {
                         return Json(new { success = false, messages = editErrorMessages });
                     }
@@ -221,7 +221,6 @@ namespace MVCPractice.Controllers
                 return Json(new { success = false, message = "An error occurred: " + ex.Message });
             }
         }
-
 
         public string GetUserTableData()
         {

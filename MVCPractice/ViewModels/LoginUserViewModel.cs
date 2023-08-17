@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace MVCPractice.ViewModels
 
         public string Password { get; set; }
 
-        public int UserType { get; set; }
+        public int TypeID { get; set; }
 
     }
 }
