@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MVCPractice.Models;
 using MVCPractice.ViewModels;
@@ -38,31 +39,34 @@ namespace MVCPractice.Controllers
                 if (validUser != null)
                 {
                     loginUserViewModel.TypeID = validUser.TypeID;
-                    Session["UserEmail"] = loginUserViewModel.EmailAddress;
+
                     var identity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
-                    //loginUserViewModel.TypeID = LTE.Local_User.FirstOrDefault((m => m.EmailAddress.Equals(loginUserViewModel.EmailAddress));
+
+                    identity.AddClaim(new Claim("UserId", validUser.ID.ToString()));
                     if (loginUserViewModel.TypeID == 1)
                     {
-                        identity.AddClaim(new Claim(ClaimTypes.Role,"User"));
+                        identity.AddClaim(new Claim(ClaimTypes.Role, "User"));
                     }
                     else if (loginUserViewModel.TypeID == 2)
                     {
                         identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
                     }
+                    else if(loginUserViewModel.TypeID == 3)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, "HR"));
+                    }
                     var authenticationManager = HttpContext.GetOwinContext().Authentication;
                     authenticationManager.SignIn(new AuthenticationProperties
                     {
-                        
-                        IsPersistent = false // Change this to true if you want persistent authentication
+
+                        IsPersistent = false
                     }, identity);
 
-
-                    //FormsAuthentication.SetAuthCookie(loginUserViewModel.EmailAddress, false);
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "");
+                    ModelState.AddModelError("", " Email veya şifre yanlış");
                     return View("Index");
                 }
             }

@@ -1,0 +1,42 @@
+﻿@model MVCPractice.ViewModels.User_A_RViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <table id="EmployeeTable" class="table table-bordered table-striped fs--1 mb-0">
+        <thead>
+            <tr>
+                <th>Isim-Soyisim</th>
+                <th>TEST</th>
+                <th>XDXDXDXD</th>
+            </tr>
+        </thead>
+        <tbody class="list"></tbody>
+    </table>
+</div>
+<script>
+    var table = $('#EmployeeTable').DataTable();
+    $(document).ready(function () {
+        table.destroy();
+        $.ajax({
+            url: "/Employee/AnnualDaysList/",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $('#EmployeeTable').DataTable({
+                    data: data,
+                    columns: [
+                        { 'data': 'Name' },
+                        { 'data': null },
+                        { 'data': null }
+                    ]
+                })
+            },
+            error: function () {
+
+            }
+        })
+    })
+</script>

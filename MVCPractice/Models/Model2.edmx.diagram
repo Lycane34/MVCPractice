@@ -4,9 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ac196cce9d9a4328891f517b20edd64f" Name="Diagram1" ZoomLevel="91">
+      <Diagram DiagramId="ac196cce9d9a4328891f517b20edd64f" Name="Diagram1" ZoomLevel="88">
         <EntityTypeShape EntityType="Local_TestModel.Local_User" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Local_TestModel.Local_User_AnnualLeaveRequests" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Local_TestModel.Local_Holiday" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

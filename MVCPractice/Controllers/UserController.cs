@@ -14,7 +14,8 @@ using System.Collections;
 
 namespace MVCPractice.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
+    [HandleError]
     public class UserController : Controller
     {
 
@@ -237,7 +238,6 @@ namespace MVCPractice.Controllers
                          ).OrderByDescending(m => m.CreateAt).ToList();
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(users);
             return json;
-            //return Json(users, JsonRequestBehavior.AllowGet);
         }
     }
 

@@ -38,6 +38,5 @@ namespace MVCPractice.Models
         public string AccountNumber { get; set; }
         public int SubeKod { get; set; }
         public int BankaKodu { get; set; }
-        public string Role { get; set; }
     }
 }

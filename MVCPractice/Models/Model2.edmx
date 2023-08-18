@@ -5,6 +5,18 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Local_TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Local_Test.dbo.Local_Holiday' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Local_Holiday">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
         <EntityType Name="Local_User">
           <Key>
             <PropertyRef Name="ID" />
@@ -33,7 +45,6 @@
           <Property Name="AccountNumber" Type="nvarchar" MaxLength="100" />
           <Property Name="SubeKod" Type="int" Nullable="false" />
           <Property Name="BankaKodu" Type="int" Nullable="false" />
-          <Property Name="Role" Type="nchar" MaxLength="30" />
         </EntityType>
         <EntityType Name="Local_User_AnnualLeaveRequests">
           <Key>
@@ -65,6 +76,13 @@
         <EntityContainer Name="Local_TestModelStoreContainer">
           <EntitySet Name="Local_User" EntityType="Self.Local_User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Local_User_AnnualLeaveRequests" EntityType="Self.Local_User_AnnualLeaveRequests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Local_Holiday" EntityType="Self.Local_Holiday" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Local_Holiday].[ID] AS [ID], 
+    [Local_Holiday].[Name] AS [Name], 
+    [Local_Holiday].[Date] AS [Date]
+    FROM [dbo].[Local_Holiday] AS [Local_Holiday]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -98,7 +116,6 @@
           <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="SubeKod" Type="Int32" Nullable="false" />
           <Property Name="BankaKodu" Type="Int32" Nullable="false" />
-          <Property Name="Role" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="Local_User_AnnualLeaveRequests">
           <Key>
@@ -130,7 +147,18 @@
         <EntityContainer Name="Local_TestEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Local_User" EntityType="Self.Local_User" />
           <EntitySet Name="Local_User_AnnualLeaveRequests" EntityType="Self.Local_User_AnnualLeaveRequests" />
+          <EntitySet Name="Local_Holiday" EntityType="Local_TestModel.Local_Holiday" />
         </EntityContainer>
+        <EntityType Name="Local_Holiday">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -140,7 +168,6 @@
           <EntitySetMapping Name="Local_User">
             <EntityTypeMapping TypeName="Local_TestModel.Local_User">
               <MappingFragment StoreEntitySet="Local_User">
-                <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="IsPersonel" ColumnName="IsPersonel" />
                 <ScalarProperty Name="FirmID" ColumnName="FirmID" />
@@ -193,6 +220,15 @@
                 <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="IsForm" ColumnName="IsForm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Local_Holiday">
+            <EntityTypeMapping TypeName="Local_TestModel.Local_Holiday">
+              <MappingFragment StoreEntitySet="Local_Holiday">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

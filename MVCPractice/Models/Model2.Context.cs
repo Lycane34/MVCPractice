@@ -27,5 +27,6 @@ namespace MVCPractice.Models
     
         public virtual DbSet<Local_User> Local_User { get; set; }
         public virtual DbSet<Local_User_AnnualLeaveRequests> Local_User_AnnualLeaveRequests { get; set; }
+        public virtual DbSet<Local_Holiday> Local_Holiday { get; set; }
     }
 }

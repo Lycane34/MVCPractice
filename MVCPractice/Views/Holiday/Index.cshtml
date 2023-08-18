@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div>
+    <div class="row">
+        <div class="col-12">
+            <div class="col-1" style="margin-left:auto">
+                <button class="btn btn-warning btn-sm" onclick="AddHoliday()">Resmi İzin Ekle</button>
+            </div>
+        </div>
+    </div>
+    <table id="HolidayTable" class="table table-bordered table-striped fs--1 mb-0">
+        <thead>
+            <tr>
+                <td>Resmi İzin</td>
+                <td>Resmi İzin Tarihi</td>
+            </tr>
+        </thead>
+        <tbody class="list"></tbody>
+    </table>
+</div>
+<div class="modal fade" id="AddHolidayPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <table id="popupWID" class="table table-bordered table-striped fs--1 mb-0">
+                    <thead class="bg-200 text-900">
+                        <tr>
+                            <th class="sort" data-sort="Isim-Soyisim">Isim-Soyisim</th>
+                            <th class="sort" data-sort="TypeID">TypeID</th>
+                            <th class="sort" data-sort="GoingDate">GoingDate</th>
+                            <th class="sort" data-sort="ReturnDate">ReturnDate</th>
+                            <th class="sort" data-sort="Açıklama">Açıklama</th>
+                            <th class="sort" data-sort="Durum">Durum</th>
+                        </tr>
+                    <tbody class="list">
+                    </tbody>
+                </table>
+            </div>
+
+            <form></form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function AddHoliday() {
+        $('#AddHolidayPopup').modal('show');
+    }
+    var table = new DataTable('#HolidayTable');
+    $(document).ready(function () {
+        table.destroy();
+        $.ajax({
+            url: '/Holiday/GetTable',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                $('#HolidayTable').DataTable({
+                    data: data,
+                    columns: [
+                        { 'data': 'Name' },
+                        {
+                            'data': 'Date', 'render': function (data, type, row) {
+                                return new Date(row.Date).toLocaleDateString('tr-TR');
+                            }
+                        },
+                       
+                    ],
+                });
+            }
+
+        })
+
+    })
+</script>

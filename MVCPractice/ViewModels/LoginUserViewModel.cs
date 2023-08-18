@@ -9,6 +9,7 @@ namespace MVCPractice.ViewModels
 {
     public class LoginUserViewModel
     {
+        public int ID { get; set; }
 
         [Required(ErrorMessage = "Email Giriniz.")]
         [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi veya şifre giriniz.")]

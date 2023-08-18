@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace MVCPractice.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class UserLeaveReqsController : Controller
     {
         public ActionResult Index()
