@@ -12,7 +12,7 @@ namespace MVCPractice.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User_AnnualLeaveRequests
+    public partial class User_AnnualLeaves
     {
         public int ID { get; set; }
         public int UserID { get; set; }
@@ -32,8 +32,8 @@ namespace MVCPractice.Models
         public System.DateTime AdminDate { get; set; }
         public bool IsCancel { get; set; }
         public string CancelMessage { get; set; }
-        public int CancelUserID { get; set; }
-        public System.DateTime CancelDate { get; set; }
+        public Nullable<int> CancelUserID { get; set; }
+        public string CancelDate { get; set; }
         public int Status { get; set; }
         public Nullable<bool> IsForm { get; set; }
     }

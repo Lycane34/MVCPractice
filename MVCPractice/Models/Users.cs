@@ -12,7 +12,7 @@ namespace MVCPractice.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Users
     {
         public int ID { get; set; }
         public Nullable<bool> IsPersonel { get; set; }

@@ -13,10 +13,10 @@ namespace MVCPractice.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MortenProjectsDBEntities : DbContext
+    public partial class LocalDBEntities : DbContext
     {
-        public MortenProjectsDBEntities()
-            : base("name=MortenProjectsDBEntities")
+        public LocalDBEntities()
+            : base("name=LocalDBEntities")
         {
         }
     
@@ -25,7 +25,8 @@ namespace MVCPractice.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<User_AnnualLeaveRequests> User_AnnualLeaveRequests { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<User_AnnualLeaves> User_AnnualLeaves { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<LegalHolidayDates> LegalHolidayDates { get; set; }
     }
 }

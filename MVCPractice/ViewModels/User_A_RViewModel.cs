@@ -13,14 +13,15 @@ namespace MVCPractice.ViewModels
 
         public DateTime CreateAt { get; set; }
         public string EmailAddress { get; set; }
-        public int? YearsWorked { get; set; }
-        public int? AnnualDayLeft { get; set; }
-        public int? TypeID { get; set; }
+        public int YearsWorked { get; set; }
+        public int AnnualDayLeft { get; set; }
+        public int TypeID { get; set; }
         public string Description { get; set; }
-        public int? Status { get; set; }
-        public DateTime? GoingDate { get; set; }
-        public DateTime? ReturnDate { get; set; }
-        public int? TotalAnnualDayUsed { get; set; }
-        public int? AnnualDayUsed { get; set; }
+        public int TotalDays { get ; set; }
+        public int Status { get; set; }
+        public DateTime GoingDate { get; set; }
+        public DateTime ReturnDate { get; set; }
+        public int TotalAnnualDayUsed { get; set; }
+        public int AnnualDayUsed { get; set; }
     }
 }

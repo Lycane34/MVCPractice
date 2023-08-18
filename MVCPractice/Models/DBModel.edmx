@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LocalDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="LegalHolidayDates">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Day" Type="nvarchar" MaxLength="20" />
+          <Property Name="HolidayStartDate" Type="datetime" Nullable="false" />
+          <Property Name="HolidayFinishDate" Type="datetime" Nullable="false" />
+          <Property Name="AddedByUserID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_AnnualLeaves">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="AnnualYear" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="GoingDate" Type="datetime" Nullable="false" />
+          <Property Name="ReturnDate" Type="datetime" Nullable="false" />
+          <Property Name="TotalDay" Type="int" Nullable="false" />
+          <Property Name="TotalWorkDay" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="ManagerID" Type="int" Nullable="false" />
+          <Property Name="ManagerDate" Type="datetime" Nullable="false" />
+          <Property Name="DirectorID" Type="int" Nullable="false" />
+          <Property Name="DirectorDate" Type="datetime" Nullable="false" />
+          <Property Name="AdminID" Type="int" Nullable="false" />
+          <Property Name="AdminDate" Type="datetime" Nullable="false" />
+          <Property Name="IsCancel" Type="bit" Nullable="false" />
+          <Property Name="CancelMessage" Type="nvarchar" MaxLength="150" />
+          <Property Name="CancelUserID" Type="int" />
+          <Property Name="CancelDate" Type="nchar" MaxLength="10" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="IsForm" Type="bit" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsPersonel" Type="bit" />
+          <Property Name="FirmID" Type="int" Nullable="false" />
+          <Property Name="OwnerID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="TaskID" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CCSINo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateAt" Type="datetime" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsWarehouse" Type="bit" Nullable="false" />
+          <Property Name="JobStartDate" Type="datetime" Nullable="false" />
+          <Property Name="JobFinishDate" Type="datetime" />
+          <Property Name="JobFinishDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="IdentityNumber" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Birthdate" Type="datetime" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="100" />
+          <Property Name="SubeKod" Type="int" Nullable="false" />
+          <Property Name="BankaKodu" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="LocalDBModelStoreContainer">
+          <EntitySet Name="LegalHolidayDates" EntityType="Self.LegalHolidayDates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_AnnualLeaves" EntityType="Self.User_AnnualLeaves" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LocalDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="LocalDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="User_AnnualLeaves" EntityType="LocalDBModel.User_AnnualLeaves" />
+          <EntitySet Name="Users" EntityType="LocalDBModel.Users" />
+          <EntitySet Name="LegalHolidayDates" EntityType="LocalDBModel.LegalHolidayDates" />
+        </EntityContainer>
+        <EntityType Name="User_AnnualLeaves">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="AnnualYear" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="GoingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TotalDay" Type="Int32" Nullable="false" />
+          <Property Name="TotalWorkDay" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerID" Type="Int32" Nullable="false" />
+          <Property Name="ManagerDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DirectorID" Type="Int32" Nullable="false" />
+          <Property Name="DirectorDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="AdminDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsCancel" Type="Boolean" Nullable="false" />
+          <Property Name="CancelMessage" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CancelUserID" Type="Int32" />
+          <Property Name="CancelDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="IsForm" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsPersonel" Type="Boolean" />
+          <Property Name="FirmID" Type="Int32" Nullable="false" />
+          <Property Name="OwnerID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="TaskID" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CCSINo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsWarehouse" Type="Boolean" Nullable="false" />
+          <Property Name="JobStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="JobFinishDate" Type="DateTime" Precision="3" />
+          <Property Name="JobFinishDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IdentityNumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Birthdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AccountNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SubeKod" Type="Int32" Nullable="false" />
+          <Property Name="BankaKodu" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LegalHolidayDates">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Day" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="HolidayStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HolidayFinishDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AddedByUserID" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LocalDBModelStoreContainer" CdmEntityContainer="LocalDBEntities">
+          <EntitySetMapping Name="User_AnnualLeaves">
+            <EntityTypeMapping TypeName="LocalDBModel.User_AnnualLeaves">
+              <MappingFragment StoreEntitySet="User_AnnualLeaves">
+                <ScalarProperty Name="IsForm" ColumnName="IsForm" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
+                <ScalarProperty Name="CancelUserID" ColumnName="CancelUserID" />
+                <ScalarProperty Name="CancelMessage" ColumnName="CancelMessage" />
+                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
+                <ScalarProperty Name="AdminDate" ColumnName="AdminDate" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="DirectorDate" ColumnName="DirectorDate" />
+                <ScalarProperty Name="DirectorID" ColumnName="DirectorID" />
+                <ScalarProperty Name="ManagerDate" ColumnName="ManagerDate" />
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TotalWorkDay" ColumnName="TotalWorkDay" />
+                <ScalarProperty Name="TotalDay" ColumnName="TotalDay" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="GoingDate" ColumnName="GoingDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="AnnualYear" ColumnName="AnnualYear" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="LocalDBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="BankaKodu" ColumnName="BankaKodu" />
+                <ScalarProperty Name="SubeKod" ColumnName="SubeKod" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="IdentityNumber" ColumnName="IdentityNumber" />
+                <ScalarProperty Name="JobFinishDescription" ColumnName="JobFinishDescription" />
+                <ScalarProperty Name="JobFinishDate" ColumnName="JobFinishDate" />
+                <ScalarProperty Name="JobStartDate" ColumnName="JobStartDate" />
+                <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreateAt" ColumnName="CreateAt" />
+                <ScalarProperty Name="CCSINo" ColumnName="CCSINo" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="TaskID" ColumnName="TaskID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="FirmID" ColumnName="FirmID" />
+                <ScalarProperty Name="IsPersonel" ColumnName="IsPersonel" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LegalHolidayDates">
+            <EntityTypeMapping TypeName="LocalDBModel.LegalHolidayDates">
+              <MappingFragment StoreEntitySet="LegalHolidayDates">
+                <ScalarProperty Name="AddedByUserID" ColumnName="AddedByUserID" />
+                <ScalarProperty Name="HolidayFinishDate" ColumnName="HolidayFinishDate" />
+                <ScalarProperty Name="HolidayStartDate" ColumnName="HolidayStartDate" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

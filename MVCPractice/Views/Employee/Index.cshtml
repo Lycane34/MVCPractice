@@ -9,8 +9,10 @@
         <thead>
             <tr>
                 <th>Isim-Soyisim</th>
-                <th>TEST</th>
-                <th>XDXDXDXD</th>
+                <th>İzin Başlangıç Tarihi</th>
+                <th>İzin Bitiş Tarihi</th>
+                <th>Toplam İzin Hakkı</th>
+                <th>Kalan İzin Hakkı</th>
             </tr>
         </thead>
         <tbody class="list"></tbody>
@@ -29,8 +31,17 @@
                     data: data,
                     columns: [
                         { 'data': 'Name' },
-                        { 'data': null },
-                        { 'data': null }
+                        {
+                            'data': 'GoingDate', 'render': function (data, type, row) {
+                                return new Date(row.GoingDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        {
+                            'data': 'ReturnDate', 'render': function (data, type, row) {
+                                return new Date(row.ReturnDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        { 'data': 'TotalDays' }
                     ]
                 })
             },

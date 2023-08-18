@@ -19,7 +19,7 @@ namespace MVCPractice.Controllers
     public class UserController : Controller
     {
 
-        Local_TestEntities1 LTE = new Local_TestEntities1();
+        LocalDBEntities LDE = new LocalDBEntities();
         //[AllowAnonymous]
         public ActionResult Index()
         {
@@ -48,7 +48,7 @@ namespace MVCPractice.Controllers
             {
                 errorMessages.Add("Kullanıcı Adı alanı boş olamaz.");
             }
-            else if (LTE.Local_User.Any(u => u.Username.ToLower() == model.Username.ToLower()))
+            else if (LDE.Users.Any(u => u.Username.ToLower() == model.Username.ToLower()))
             {
                 errorMessages.Add("Bu Kullanıcı Adı Zaten kayıtlı.");
             }
@@ -62,7 +62,7 @@ namespace MVCPractice.Controllers
             {
                 errorMessages.Add("Telefon alanı boş olamaz.");
             }
-            else if (LTE.Local_User.Any(u => u.Phone == model.Phone))
+            else if (LDE.Users.Any(u => u.Phone == model.Phone))
             {
                 errorMessages.Add("Bu Telefon Numarası Zaten Kayıtlı.");
             }
@@ -71,7 +71,7 @@ namespace MVCPractice.Controllers
             {
                 errorMessages.Add("Email alanı boş olamaz.");
             }
-            else if (LTE.Local_User.Any(u => u.EmailAddress.ToLower() == model.EmailAddress.ToLower()))
+            else if (LDE.Users.Any(u => u.EmailAddress.ToLower() == model.EmailAddress.ToLower()))
             {
                 errorMessages.Add("Bu Email Zaten Kayıtlı.");
             }
@@ -82,7 +82,7 @@ namespace MVCPractice.Controllers
             }
 
 
-            Local_User entity = new Local_User();
+            Users entity = new Users();
             entity.EmailAddress = model.EmailAddress;
             entity.Phone = model.Phone;
             entity.Surname = model.Surname;
@@ -104,8 +104,8 @@ namespace MVCPractice.Controllers
             entity.OwnerID = 1032;
             entity.TaskID = 3010;
             entity.TypeID = 1;
-            LTE.Local_User.Add(entity);
-            LTE.SaveChanges();
+            LDE.Users.Add(entity);
+            LDE.SaveChanges();
 
 
 
@@ -116,12 +116,12 @@ namespace MVCPractice.Controllers
         {
             try
             {
-                var userToDelete = LTE.Local_User.Find(id);
+                var userToDelete = LDE.Users.Find(id);
 
                 if (userToDelete != null && userToDelete.IsActive != false)
                 {
                     userToDelete.IsActive = false;
-                    LTE.SaveChanges();
+                    LDE.SaveChanges();
 
                     return Json(new { success = true, message = "User deleted successfully." });
                 }
@@ -140,7 +140,7 @@ namespace MVCPractice.Controllers
         {
             try
             {
-                var userData = LTE.Local_User.Find(id);
+                var userData = LDE.Users.Find(id);
                 if (userData != null && userData.IsActive != false)
                 {
                     return Json(new { success = true, data = userData }, JsonRequestBehavior.AllowGet);
@@ -162,18 +162,18 @@ namespace MVCPractice.Controllers
             var editErrorMessages = new List<string>();
             try
             {
-                var existingUser = LTE.Local_User.Find(editedUser.ID);
+                var existingUser = LDE.Users.Find(editedUser.ID);
                 if (existingUser != null && existingUser.IsActive != false)
                 {
-                    if (LTE.Local_User.Any(u => u.EmailAddress.ToLower() == editedUser.EmailAddress.ToLower() && u.ID != editedUser.ID))
+                    if (LDE.Users.Any(u => u.EmailAddress.ToLower() == editedUser.EmailAddress.ToLower() && u.ID != editedUser.ID))
                     {
                         editErrorMessages.Add("Bu Email zaten kullanılıyor.");
                     }
-                    if (LTE.Local_User.Any(u => u.Username.ToLower() == editedUser.Username.ToLower() && u.ID != editedUser.ID))
+                    if (LDE.Users.Any(u => u.Username.ToLower() == editedUser.Username.ToLower() && u.ID != editedUser.ID))
                     {
                         editErrorMessages.Add("Bu Kullanıcı Adı zaten kullanılıyor.");
                     }
-                    if (LTE.Local_User.Any(u => u.Phone == editedUser.Phone && u.ID != editedUser.ID))
+                    if (LDE.Users.Any(u => u.Phone == editedUser.Phone && u.ID != editedUser.ID))
                     {
                         editErrorMessages.Add("Bu Telefon Numarası zaten kullanılıyor.");
                     }
@@ -188,7 +188,7 @@ namespace MVCPractice.Controllers
                     existingUser.Phone = editedUser.Phone;
                     existingUser.EmailAddress = editedUser.EmailAddress;
 
-                    LTE.SaveChanges();
+                    LDE.SaveChanges();
 
                     return Json(new { success = true, message = "User updated successfully." });
                 }
@@ -207,7 +207,7 @@ namespace MVCPractice.Controllers
         {
             try
             {
-                var userData = LTE.Local_User.Find(id);
+                var userData = LDE.Users.Find(id);
                 if (userData != null && userData.IsActive != false)
                 {
                     return Json(new { success = true, data = userData });
@@ -225,7 +225,7 @@ namespace MVCPractice.Controllers
 
         public string GetUserTableData()
         {
-            var users = (from u in LTE.Local_User
+            var users = (from u in LDE.Users
                          where u.IsActive == true
                          select new User_A_RViewModel
                          {

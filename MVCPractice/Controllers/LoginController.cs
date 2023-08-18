@@ -30,10 +30,10 @@ namespace MVCPractice.Controllers
                 return View("Index", loginUserViewModel); // Return to the same view with validation errors
             }
 
-            using (Local_TestEntities1 LTE = new Local_TestEntities1())
+            using (LocalDBEntities LDE = new LocalDBEntities())
             {
 
-                var validUser = LTE.Local_User.FirstOrDefault(user =>
+                var validUser = LDE.Users.FirstOrDefault(user =>
                 user.EmailAddress.ToLower() == loginUserViewModel.EmailAddress.ToLower() &&
                 user.Password == loginUserViewModel.Password);
                 if (validUser != null)
