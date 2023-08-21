@@ -25,8 +25,9 @@ namespace MVCPractice.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<User_AnnualLeaves> User_AnnualLeaves { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<LegalHolidayDates> LegalHolidayDates { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<AnnualLeaveRequests> AnnualLeaveRequests { get; set; }
+        public virtual DbSet<User_AnnualLeaves> User_AnnualLeaves { get; set; }
     }
 }

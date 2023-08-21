@@ -5,7 +5,6 @@
 }
 <script>
 
-    // Load table data
     function loadTableData() {
         var table = $('#UsersTable').DataTable();
         table.destroy();
@@ -18,7 +17,7 @@
                 $('#UsersTable').DataTable({
                     data: data,
                     columns: [
-                        { 'data': 'Name' },
+                        { 'data': 'ID' },
                         {
                             'data': 'JobStartDate', 'render': function (data, type, row) {
                                 return new Date(row.JobStartDate).toLocaleDateString('tr-TR');

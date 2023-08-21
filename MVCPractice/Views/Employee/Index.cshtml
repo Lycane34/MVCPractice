@@ -5,29 +5,151 @@
 }
 
 <div>
+    <div class="row">
+        <div class="col-12">
+            <div class="col-1" style="margin-left:auto">
+                <button class="btn btn-warning btn-sm" onclick="RequestFormStyle()">İzin Talep Et</button>
+            </div>
+        </div>
+    </div>
+    <form id="AnnualDayRequestForm" style="display:none">
+        <div class="row">
+            <div class="col-12">
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="AnnualDayStartDate" class="form-label">İzin Başlangıç Tarihi</label>
+                    <input type="date" class="form-control" id="AnnualDayStartDateInput"/>
+                    <span class="text-danger" id="AnnualDayStartDate_error" style="display:none;"></span>
+
+                </div>
+                <div class="col-6">
+                    <label for="AnnualDayFinishDate" class="form-label">İzin Bitiş Tarihi</label>
+                    <input type="date" class="form-control" id="AnnualDayFinishDateInput"/>
+                    <span class="text-danger" id="AnnualDayFinishDate_error" style="display:none"></span>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <br />
+                    <label for="AnnualDayDescription" class="form-label">Açıklama</label>
+                    <input type="text" class="form-control form-control-lg" id="AnnualDayDescriptionInput"/>
+                    <span class="text-danger" id="AnnualDayDescription_error" style="display:none;"></span>
+                    <br />
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-2 ">
+                    <button class="btn btn-primary btn-block btn-sm" onclick="AddAnnualDayRequest(event)">İzin Talep et</button>
+                </div>
+                <div class="col-2">
+                    <a id="cancelAnnualDayRequestFormButton" class="btn btn-danger btn-block btn-sm" style="color:white">Vazgeç</a>
+                </div>
+            </div>
+        </div>
+        
+    </form>
     <table id="EmployeeTable" class="table table-bordered table-striped fs--1 mb-0">
         <thead>
             <tr>
                 <th>Isim-Soyisim</th>
                 <th>İzin Başlangıç Tarihi</th>
                 <th>İzin Bitiş Tarihi</th>
+                <th>Açıklama</th>
                 <th>Toplam İzin Hakkı</th>
-                <th>Kalan İzin Hakkı</th>
+                <th>Kullanılan İzin Günü Sayısı</th>
+                <th>Kalan İzin Günü Sayısı</th>
             </tr>
         </thead>
         <tbody class="list"></tbody>
     </table>
 </div>
+
+
+
 <script>
-    var table = $('#EmployeeTable').DataTable();
-    $(document).ready(function () {
+    function RequestFormStyle() {
+        var RequestForm = document.getElementById("AnnualDayRequestForm");
+
+        if (RequestForm.style.display === "none") {
+            RequestForm.style.display = "block";
+        } else {
+            RequestForm.style.display = "none";
+        }
+    }
+    function AddAnnualDayRequest(event) {
+        event.preventDefault();
+       
+        var AnnualDayRequestDatas = {
+            RequestGoingDate: $('#AnnualDayStartDateInput').val(),
+            RequestReturnDate : $('#AnnualDayFinishDateInput').val(),
+            RequestDescription : $('#AnnualDayDescriptionInput').val(),
+        }
+        $.ajax({
+            url: "/Employee/AnnualDayRequest",
+            type: "POST",
+            data: AnnualDayRequestDatas,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                if (data.success) {
+
+                    Swal.fire({
+                        title: 'Başarılı!',
+                        text: 'İzin Başarıyla Talep Edildi Eklendi.',
+                        icon: 'success',
+                        confirmButtonText: 'Tamam'
+                    })
+                    GetTable();
+                }
+                else {
+                    
+                    var errorMessages = data.messages;
+                    $('#AnnualDayStartDate_error').text('').hide();
+                    $('#AnnualDayFinishDate_error').text('').hide();
+                    $('#AnnualDayDescription_error').text('').hide();
+                    if (typeof errorMessages !== 'undefined') { 
+                    for (var i = 0; i < errorMessages.length; i++) {
+                        var errorMessage = errorMessages[i];
+                        
+                        if (errorMessage.includes("Gidiş tarihi")) {
+                            $('#AnnualDayStartDate_error').text(errorMessage).show();
+                        } else if (errorMessage.includes("Dönüş tarihi")) {
+                            $('#AnnualDayFinishDate_error').text(errorMessage).show();
+                        } else if (errorMessage.includes("Açıklama")) {
+                            $('#AnnualDayDescription_error').text(errorMessage).show();
+                        }
+                        }
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'Başarısız',
+                            text: 'Yetersiz izin günü',
+                            icon: 'error',
+                            confirmButtonText: 'Tamam'
+                        })
+                    }
+                }
+            }
+
+        })
+
+    }
+
+    function GetTable() {
+        var table = $('#EmployeeTable').DataTable();
+
         table.destroy();
         $.ajax({
             url: "/Employee/AnnualDaysList/",
             type: "GET",
             dataType: "json",
             success: function (data) {
+                console.log(data)
                 $('#EmployeeTable').DataTable({
+
                     data: data,
                     columns: [
                         { 'data': 'Name' },
@@ -41,7 +163,10 @@
                                 return new Date(row.ReturnDate).toLocaleDateString('tr-TR');
                             }
                         },
-                        { 'data': 'TotalDays' }
+                        { 'data': 'Description' },
+                        { 'data': 'TotalDays' },
+                        { 'data': 'NumberOfDays' },
+                        { 'data': 'AnnualDayLeft' }
                     ]
                 })
             },
@@ -49,5 +174,13 @@
 
             }
         })
+    }
+    var table = $('#EmployeeTable').DataTable();
+    $(document).ready(function () {
+        GetTable();
+        document.getElementById("cancelAnnualDayRequestFormButton").addEventListener("click", function () {
+            document.getElementById("AnnualDayRequestForm").style.display = "none";
+        });
+
     })
 </script>

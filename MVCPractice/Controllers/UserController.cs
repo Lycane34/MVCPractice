@@ -104,6 +104,7 @@ namespace MVCPractice.Controllers
             entity.OwnerID = 1032;
             entity.TaskID = 3010;
             entity.TypeID = 1;
+
             LDE.Users.Add(entity);
             LDE.SaveChanges();
 

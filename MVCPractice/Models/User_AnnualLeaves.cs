@@ -33,7 +33,7 @@ namespace MVCPractice.Models
         public bool IsCancel { get; set; }
         public string CancelMessage { get; set; }
         public Nullable<int> CancelUserID { get; set; }
-        public string CancelDate { get; set; }
+        public Nullable<System.DateTime> CancelDate { get; set; }
         public int Status { get; set; }
         public Nullable<bool> IsForm { get; set; }
     }

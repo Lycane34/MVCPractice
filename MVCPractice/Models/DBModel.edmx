@@ -5,6 +5,22 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="LocalDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AnnualLeaveRequests">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="GoingDate" Type="datetime" Nullable="false" />
+          <Property Name="ReturnDate" Type="datetime" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="CreatetDate" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Days" Type="int" Nullable="false" />
+          <Property Name="WorkDays" Type="int" Nullable="false" />
+          <Property Name="TotalAnnualDays" Type="int" Nullable="false" />
+          <Property Name="AnnualYear" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="LegalHolidayDates">
           <Key>
             <PropertyRef Name="ID" />
@@ -39,7 +55,7 @@
           <Property Name="IsCancel" Type="bit" Nullable="false" />
           <Property Name="CancelMessage" Type="nvarchar" MaxLength="150" />
           <Property Name="CancelUserID" Type="int" />
-          <Property Name="CancelDate" Type="nchar" MaxLength="10" />
+          <Property Name="CancelDate" Type="datetime" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="IsForm" Type="bit" />
         </EntityType>
@@ -73,6 +89,7 @@
           <Property Name="BankaKodu" Type="int" Nullable="false" />
         </EntityType>
         <EntityContainer Name="LocalDBModelStoreContainer">
+          <EntitySet Name="AnnualLeaveRequests" EntityType="Self.AnnualLeaveRequests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LegalHolidayDates" EntityType="Self.LegalHolidayDates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User_AnnualLeaves" EntityType="Self.User_AnnualLeaves" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -82,36 +99,21 @@
     <edmx:ConceptualModels>
       <Schema Namespace="LocalDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="LocalDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="User_AnnualLeaves" EntityType="LocalDBModel.User_AnnualLeaves" />
-          <EntitySet Name="Users" EntityType="LocalDBModel.Users" />
           <EntitySet Name="LegalHolidayDates" EntityType="LocalDBModel.LegalHolidayDates" />
+          <EntitySet Name="Users" EntityType="LocalDBModel.Users" />
+          <EntitySet Name="AnnualLeaveRequests" EntityType="LocalDBModel.AnnualLeaveRequests" />
+          <EntitySet Name="User_AnnualLeaves" EntityType="LocalDBModel.User_AnnualLeaves" />
         </EntityContainer>
-        <EntityType Name="User_AnnualLeaves">
+        <EntityType Name="LegalHolidayDates">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="TypeID" Type="Int32" Nullable="false" />
-          <Property Name="AnnualYear" Type="Int32" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="GoingDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="TotalDay" Type="Int32" Nullable="false" />
-          <Property Name="TotalWorkDay" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerID" Type="Int32" Nullable="false" />
-          <Property Name="ManagerDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DirectorID" Type="Int32" Nullable="false" />
-          <Property Name="DirectorDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="AdminID" Type="Int32" Nullable="false" />
-          <Property Name="AdminDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsCancel" Type="Boolean" Nullable="false" />
-          <Property Name="CancelMessage" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <Property Name="CancelUserID" Type="Int32" />
-          <Property Name="CancelDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="IsForm" Type="Boolean" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Day" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="HolidayStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HolidayFinishDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AddedByUserID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -142,16 +144,48 @@
           <Property Name="SubeKod" Type="Int32" Nullable="false" />
           <Property Name="BankaKodu" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="LegalHolidayDates">
+        <EntityType Name="AnnualLeaveRequests">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Day" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="HolidayStartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="HolidayFinishDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="AddedByUserID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="GoingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CreatetDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Days" Type="Int32" Nullable="false" />
+          <Property Name="WorkDays" Type="Int32" Nullable="false" />
+          <Property Name="TotalAnnualDays" Type="Int32" Nullable="false" />
+          <Property Name="AnnualYear" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_AnnualLeaves">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="AnnualYear" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="GoingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TotalDay" Type="Int32" Nullable="false" />
+          <Property Name="TotalWorkDay" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ManagerID" Type="Int32" Nullable="false" />
+          <Property Name="ManagerDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DirectorID" Type="Int32" Nullable="false" />
+          <Property Name="DirectorDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="AdminDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsCancel" Type="Boolean" Nullable="false" />
+          <Property Name="CancelMessage" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CancelUserID" Type="Int32" />
+          <Property Name="CancelDate" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="IsForm" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -159,30 +193,14 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="LocalDBModelStoreContainer" CdmEntityContainer="LocalDBEntities">
-          <EntitySetMapping Name="User_AnnualLeaves">
-            <EntityTypeMapping TypeName="LocalDBModel.User_AnnualLeaves">
-              <MappingFragment StoreEntitySet="User_AnnualLeaves">
-                <ScalarProperty Name="IsForm" ColumnName="IsForm" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
-                <ScalarProperty Name="CancelUserID" ColumnName="CancelUserID" />
-                <ScalarProperty Name="CancelMessage" ColumnName="CancelMessage" />
-                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
-                <ScalarProperty Name="AdminDate" ColumnName="AdminDate" />
-                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-                <ScalarProperty Name="DirectorDate" ColumnName="DirectorDate" />
-                <ScalarProperty Name="DirectorID" ColumnName="DirectorID" />
-                <ScalarProperty Name="ManagerDate" ColumnName="ManagerDate" />
-                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="TotalWorkDay" ColumnName="TotalWorkDay" />
-                <ScalarProperty Name="TotalDay" ColumnName="TotalDay" />
-                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
-                <ScalarProperty Name="GoingDate" ColumnName="GoingDate" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="AnnualYear" ColumnName="AnnualYear" />
-                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <EntitySetMapping Name="LegalHolidayDates">
+            <EntityTypeMapping TypeName="LocalDBModel.LegalHolidayDates">
+              <MappingFragment StoreEntitySet="LegalHolidayDates">
+                <ScalarProperty Name="AddedByUserID" ColumnName="AddedByUserID" />
+                <ScalarProperty Name="HolidayFinishDate" ColumnName="HolidayFinishDate" />
+                <ScalarProperty Name="HolidayStartDate" ColumnName="HolidayStartDate" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -217,14 +235,47 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LegalHolidayDates">
-            <EntityTypeMapping TypeName="LocalDBModel.LegalHolidayDates">
-              <MappingFragment StoreEntitySet="LegalHolidayDates">
-                <ScalarProperty Name="AddedByUserID" ColumnName="AddedByUserID" />
-                <ScalarProperty Name="HolidayFinishDate" ColumnName="HolidayFinishDate" />
-                <ScalarProperty Name="HolidayStartDate" ColumnName="HolidayStartDate" />
-                <ScalarProperty Name="Day" ColumnName="Day" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+          <EntitySetMapping Name="AnnualLeaveRequests">
+            <EntityTypeMapping TypeName="LocalDBModel.AnnualLeaveRequests">
+              <MappingFragment StoreEntitySet="AnnualLeaveRequests">
+                <ScalarProperty Name="AnnualYear" ColumnName="AnnualYear" />
+                <ScalarProperty Name="TotalAnnualDays" ColumnName="TotalAnnualDays" />
+                <ScalarProperty Name="WorkDays" ColumnName="WorkDays" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatetDate" ColumnName="CreatetDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="GoingDate" ColumnName="GoingDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_AnnualLeaves">
+            <EntityTypeMapping TypeName="LocalDBModel.User_AnnualLeaves">
+              <MappingFragment StoreEntitySet="User_AnnualLeaves">
+                <ScalarProperty Name="IsForm" ColumnName="IsForm" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
+                <ScalarProperty Name="CancelUserID" ColumnName="CancelUserID" />
+                <ScalarProperty Name="CancelMessage" ColumnName="CancelMessage" />
+                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
+                <ScalarProperty Name="AdminDate" ColumnName="AdminDate" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="DirectorDate" ColumnName="DirectorDate" />
+                <ScalarProperty Name="DirectorID" ColumnName="DirectorID" />
+                <ScalarProperty Name="ManagerDate" ColumnName="ManagerDate" />
+                <ScalarProperty Name="ManagerID" ColumnName="ManagerID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TotalWorkDay" ColumnName="TotalWorkDay" />
+                <ScalarProperty Name="TotalDay" ColumnName="TotalDay" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="GoingDate" ColumnName="GoingDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="AnnualYear" ColumnName="AnnualYear" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

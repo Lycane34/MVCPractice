@@ -18,8 +18,12 @@ namespace MVCPractice.ViewModels
         public int TypeID { get; set; }
         public string Description { get; set; }
         public int TotalDays { get ; set; }
+        public int NumberOfDays { get; set; }
         public int Status { get; set; }
         public DateTime GoingDate { get; set; }
+        
+        public DateTime LatestAnnualUsed { get; set; }
+
         public DateTime ReturnDate { get; set; }
         public int TotalAnnualDayUsed { get; set; }
         public int AnnualDayUsed { get; set; }

@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div>
+    <div class="table-responsive scrollbar">
+        <table id="UsersTable" class="table table-bordered table-striped fs--1 mb-0">
+            <thead class="bg-200 text-900">
+                <tr>
+                    <th>Isim-Soyisim</th>
+                    <th>En Son Kullanılan İzin</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+            </tbody>
+
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="RequestPopup">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+
+            <div class="modal-body">
+                <div style="overflow-x: auto;">
+                    <table id="RequestPopupTable" class="table table-bordered table-responsive table-striped">
+                        <thead>
+                            <tr>
+                                <th class="sort" data-sort="Isim-Soyisim">Isim-Soyisim</th>
+                                <th class="sort" data-sort="GoingDate">GoingDate</th>
+                                <th class="sort" data-sort="ReturnDate">ReturnDate</th>
+                                <th class="sort" data-sort="Açıklama">Açıklama</th>
+                                <th></th>
+                            </tr>
+                        <tbody class="list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DenyPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+
+
+                <label for="CancelDescription">Açıklama</label>
+                <input type="text" class="form-control" id="CancelDescriptionInput" />
+
+                <br />
+                <button class="btn btn-primary" id="submitbutton" style="align-self:auto">Tamam</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function loadTableData() {
+        var table = $('#UsersTable').DataTable();
+        table.destroy();
+
+        $.ajax({
+            url: "/Manager/GetUsersTable",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#UsersTable').DataTable({
+                    data: data,
+                    columns: [
+
+                        { 'data': 'Name' },
+                        {
+                            'data': 'LatestAnnualUsed', 'render': function (data, type, row) {
+                                return new Date(row.LatestAnnualUsed).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        {
+                            'data': null,
+                            'render': function (data, type, row) {
+                                return '<button class="btn btn-primary ms-2" onclick="GetAnnualLeaveRequest(' + row.ID + ')">Talepleri Görüntüle</button>';
+                            }
+                        }
+
+                    ],
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.error("Error fetching data:", thrownError);
+            }
+        })
+    }
+    function ConfirmRequest(id) {
+        $.ajax({
+            url: "/Manager/ConfirmRequest",
+            type: "POST",
+            data: { id: id },
+            dataType: "json",
+            success: function () {
+                $('#RequestPopup').modal('hide');
+                Swal.fire({
+                    title: 'İzin Onaylandı',
+                    text: 'Çalışanın izni onaylandı',
+                    icon: 'success',
+                    confirmButtonText: 'Tamam'
+                })
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function DenyRequest(id) {   
+
+            $.ajax({
+                url: "/Manager/DenyRequest",
+                type: "POST",
+                data: { id: id},
+                dataType: "json",
+                success: function (data) {
+                    $('#RequestPopup').modal('hide');
+                    Swal.fire({
+                        title: 'İzin Reddedildi',
+                        text: 'Çalışanın izni reddedildi',
+                        icon: 'warning',
+                        confirmButtonText: 'Tamam'
+                    })
+                },
+                error: function () {
+                    
+                }
+            });
+        };
+        
+        
+    function GetAnnualLeaveRequest(id) {
+        var table = $('#RequestPopupTable').DataTable();
+        table.destroy();
+        $('#RequestPopup').modal('show');
+        $.ajax({
+            url: "/Manager/AnnualRequests",
+            type: "POST",
+            data: { id: id },
+            dataType: "json",
+            success: function (data) {
+                $('#RequestPopupTable').DataTable({
+                    data: data,
+                    columns: [
+                        { 'data': 'Name' },
+                        {
+                            'data': 'GoingDate', 'render': function (data, type, row) {
+                                return new Date(row.GoingDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        {
+                            'data': 'ReturnDate', 'render': function (data, type, row) {
+                                return new Date(row.ReturnDate).toLocaleDateString('tr-TR');
+                            }
+                        },
+                        { 'data': 'Description' },
+                        {
+                            'data': null,
+                            'render': function (data, type, row) {
+                                return '<button class="btn btn-success ms-2" onclick="ConfirmRequest(' + row.ID + ')">Onayla</button>' +
+                                    '<button class="btn btn-danger ms-2" onclick="DenyRequest(' + row.ID + ')">Reddet</button>';
+                            }
+                        }
+                    ]
+
+                })
+            },
+            error: function () {
+
+            }
+        })
+    }
+    var table = $('#UsersTable').DataTable();
+    $(document).ready(function () {
+        loadTableData();
+    });
+</script>
