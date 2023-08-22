@@ -27,6 +27,25 @@ namespace MVCPractice.Controllers
 
             return View();
         }
+        [HttpGet]
+        public JsonResult GetAdminsList()
+        {
+            if (LDE.Users.Any(M => M.TypeID == 2))
+            {
+                var admins = (from u in LDE.Users
+                             where u.TypeID == 2
+                             select new
+                             {
+                                 u.ID,
+                                 u.Name,
+                             }).ToList();
+                return Json(admins, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return (JsonResult)null;
+            }
+        }
 
         [HttpPost]
         public JsonResult UserAdd(CreateUserViewModel model)
@@ -75,7 +94,10 @@ namespace MVCPractice.Controllers
             {
                 errorMessages.Add("Bu Email Zaten Kayıtlı.");
             }
-
+            if(model.SelectedAdminID == -1)
+            {
+                errorMessages.Add("Bir Admin Seçmelisiniz.");
+            }
             if (errorMessages.Count > 0)
             {
                 return Json(new { success = false, messages = errorMessages });
@@ -104,6 +126,7 @@ namespace MVCPractice.Controllers
             entity.OwnerID = 1032;
             entity.TaskID = 3010;
             entity.TypeID = 1;
+            entity.AdminID = model.SelectedAdminID;
 
             LDE.Users.Add(entity);
             LDE.SaveChanges();
@@ -188,7 +211,7 @@ namespace MVCPractice.Controllers
                     existingUser.Password = editedUser.Password;
                     existingUser.Phone = editedUser.Phone;
                     existingUser.EmailAddress = editedUser.EmailAddress;
-
+                    existingUser.AdminID = editedUser.SelectedAdminID;
                     LDE.SaveChanges();
 
                     return Json(new { success = true, message = "User updated successfully." });

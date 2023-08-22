@@ -214,7 +214,7 @@ namespace MVCPractice.Controllers
             ALR.TotalAnnualDays = totalDays;
             ALR.Days = (ALRModel.RequestReturnDate - ALRModel.RequestGoingDate).Days +1;
             ALR.WorkDays = TotalWorkDays;
-            ALR.CreatetDate = DateTime.Now;
+            ALR.CreateDate = DateTime.Now;
             ALR.Status = 0;
             LDE.AnnualLeaveRequests.Add(ALR);
             LDE.SaveChanges();

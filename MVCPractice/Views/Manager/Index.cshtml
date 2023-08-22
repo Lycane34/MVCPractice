@@ -108,6 +108,7 @@
             dataType: "json",
             success: function () {
                 $('#RequestPopup').modal('hide');
+                loadTableData();
                 Swal.fire({
                     title: 'İzin Onaylandı',
                     text: 'Çalışanın izni onaylandı',
@@ -130,6 +131,7 @@
                 dataType: "json",
                 success: function (data) {
                     $('#RequestPopup').modal('hide');
+                    loadTableData();
                     Swal.fire({
                         title: 'İzin Reddedildi',
                         text: 'Çalışanın izni reddedildi',

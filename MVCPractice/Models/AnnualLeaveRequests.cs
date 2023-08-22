@@ -19,7 +19,7 @@ namespace MVCPractice.Models
         public System.DateTime GoingDate { get; set; }
         public System.DateTime ReturnDate { get; set; }
         public string Description { get; set; }
-        public System.DateTime CreatetDate { get; set; }
+        public System.DateTime CreateDate { get; set; }
         public int Status { get; set; }
         public int Days { get; set; }
         public int WorkDays { get; set; }

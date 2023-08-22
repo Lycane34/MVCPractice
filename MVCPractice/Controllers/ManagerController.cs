@@ -20,9 +20,12 @@ namespace MVCPractice.Controllers
         }
 
         [HttpGet]
-        public string GetUsersTable() { 
+        public string GetUsersTable() {
+            var adminUserIdClaim = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
+            int adminUserId = int.Parse(adminUserIdClaim.Value);
             var usersTable = (from U in LDE.Users 
                              join A in LDE.AnnualLeaveRequests on U.ID equals A.UserID
+                             where U.AdminID == adminUserId && A.Status == 0
                              group new { U, A} by U.ID into groupedData
                              select new User_A_RViewModel
                              {

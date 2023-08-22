@@ -95,7 +95,8 @@
             Username: $('#AUUsername').val(),
             Password: $('#AUPassword').val(),
             Phone: $('#AUPhone').val(),
-            EmailAddress: $('#AUEmailAddress').val()
+            EmailAddress: $('#AUEmailAddress').val(),
+            SelectedAdminID: $('#SelectedAdminID').val(),
 
         }
 
@@ -139,6 +140,8 @@
                             $('#AUSurname_error').text(errorMessage).show();
                         } else if (errorMessage.includes("Şifre")) {
                             $('#AUPassword_error').text(errorMessage).show();
+                        } else if (errorMessage.includes("Admi")) {
+                            $('#SelectedAdminID_error').text(errorMessage).show();
                         }
                     }
                 }
@@ -227,6 +230,7 @@
                 console.log(userData)
                 if (userData.success) {
                     var ReqData = userData.data;
+                    var adminList = userData.ad
                     $('#EditUserID').val(ReqData.ID);
                     $('#EUName').val(ReqData.Name);
                     $('#EUSurname').val(ReqData.Surname);
@@ -271,6 +275,26 @@
         var table = $('#UsersTable').DataTable();
 
         loadTableData();
+
+        $.ajax({
+            url: "/User/GetAdminsList",
+            type: "GET",
+            dataType: "json",
+            success: function (admins) {
+                debugger
+                var dropdown = $('#SelectedAdminID');
+                dropdown.empty();
+                dropdown.append($('<option>').val(-1).text('Seçiniz')); 
+                $.each(admins, function (index, admin) {
+                    dropdown.append($('<option>').val(admin.ID).text(admin.Name));
+
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.error("Error fetching admin list:", thrownError);
+            }
+        });
+
 
 
 
@@ -333,7 +357,14 @@
                     <span class="text-danger" id="AUEmailAddress_error" style="display: none;"></span>
                 </div>
             </div>
-            <br />
+            <div class="row">
+                <div class="col-4">
+                    <label for="SelectedAdminID" class="form-label">Atananacak Müdürü seçin</label>
+                    <select id="SelectedAdminID" class="form-control">
+                    </select>
+                    <span class="text-danger" id="SelectedAdminID_error" style="display:none;"></span>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-2">
                     <button class="btn btn-success btn-block btn-sm" onclick="AddUser(event)">Kullanıcı Ekle</button>
@@ -342,6 +373,7 @@
                     <a id="cancelAddFormButton" class="btn btn-block btn-danger btn-sm" style="color:white">Vazgeç</a>
                 </div>
             </div>
+
             <br />
         </div>
     </form>
