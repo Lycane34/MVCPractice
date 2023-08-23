@@ -30,14 +30,15 @@ namespace MVCPractice.Controllers
         [HttpGet]
         public JsonResult GetAdminsList()
         {
-            if (LDE.Users.Any(M => M.TypeID == 2))
+            if (LDE.Users.Any(M => M.TypeID == 2) || LDE.Users.Any(M => M.TypeID == 4))
             {
                 var admins = (from u in LDE.Users
-                             where u.TypeID == 2
+                             where u.TypeID == 2 || u.TypeID == 4
                              select new
                              {
                                  u.ID,
-                                 u.Name,
+                                  u.Name,
+                                  u.Surname,
                              }).ToList();
                 return Json(admins, JsonRequestBehavior.AllowGet);
             }
@@ -125,7 +126,7 @@ namespace MVCPractice.Controllers
             entity.JobStartDate = new DateTime(2020, 3, 28);
             entity.OwnerID = 1032;
             entity.TaskID = 3010;
-            entity.TypeID = 1;
+            entity.TypeID = model.SelectedTypeID;
             entity.AdminID = model.SelectedAdminID;
 
             LDE.Users.Add(entity);

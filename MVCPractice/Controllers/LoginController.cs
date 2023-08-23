@@ -47,7 +47,7 @@ namespace MVCPractice.Controllers
                     {
                         identity.AddClaim(new Claim(ClaimTypes.Role, "User"));
                     }
-                    else if (loginUserViewModel.TypeID == 2)
+                    else if (loginUserViewModel.TypeID == 2 || loginUserViewModel.TypeID == 4)
                     {
                         identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
                     }

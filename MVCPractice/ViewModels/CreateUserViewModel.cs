@@ -29,6 +29,7 @@ namespace MVCPractice.ViewModels
         public string Phone { get; set; }
 
         public int SelectedAdminID { get; set; }
+        public int SelectedTypeID { get; set; }
 
     }
 }

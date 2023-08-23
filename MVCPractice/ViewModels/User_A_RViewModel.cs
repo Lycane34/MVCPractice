@@ -11,6 +11,7 @@ namespace MVCPractice.ViewModels
         public string Name { get; set; }
         public DateTime JobStartDate { get; set; }
 
+        public string StatusMsg { get; set; }
         public DateTime CreateAt { get; set; }
         public string EmailAddress { get; set; }
         public int YearsWorked { get; set; }
@@ -18,7 +19,7 @@ namespace MVCPractice.ViewModels
         public int TypeID { get; set; }
         public string Description { get; set; }
         public int TotalDays { get ; set; }
-        public int NumberOfDays { get; set; }
+        public int TotalWorkDays { get; set; }
         public int Status { get; set; }
         public DateTime GoingDate { get; set; }
         

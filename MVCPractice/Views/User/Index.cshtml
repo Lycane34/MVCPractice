@@ -17,7 +17,7 @@
                 $('#UsersTable').DataTable({
                     data: data,
                     columns: [
-                        { 'data': 'ID' },
+                        { 'data': 'Name' },
                         {
                             'data': 'JobStartDate', 'render': function (data, type, row) {
                                 return new Date(row.JobStartDate).toLocaleDateString('tr-TR');
@@ -97,6 +97,8 @@
             Phone: $('#AUPhone').val(),
             EmailAddress: $('#AUEmailAddress').val(),
             SelectedAdminID: $('#SelectedAdminID').val(),
+            SelectedTypeID: $('input[name="SelectedUserRoleID"]:checked').val() 
+
 
         }
 
@@ -140,7 +142,7 @@
                             $('#AUSurname_error').text(errorMessage).show();
                         } else if (errorMessage.includes("Şifre")) {
                             $('#AUPassword_error').text(errorMessage).show();
-                        } else if (errorMessage.includes("Admi")) {
+                        } else if (errorMessage.includes("Admin")) {
                             $('#SelectedAdminID_error').text(errorMessage).show();
                         }
                     }
@@ -281,12 +283,11 @@
             type: "GET",
             dataType: "json",
             success: function (admins) {
-                debugger
                 var dropdown = $('#SelectedAdminID');
                 dropdown.empty();
                 dropdown.append($('<option>').val(-1).text('Seçiniz')); 
                 $.each(admins, function (index, admin) {
-                    dropdown.append($('<option>').val(admin.ID).text(admin.Name));
+                    dropdown.append($('<option>').val(admin.ID).text(admin.Name + " " + admin.Surname));
 
                 });
             },
@@ -359,10 +360,30 @@
             </div>
             <div class="row">
                 <div class="col-4">
-                    <label for="SelectedAdminID" class="form-label">Atananacak Müdürü seçin</label>
+                    <label for="SelectedAdminID" class="form-label">Atanacak Müdürü seçin</label>
                     <select id="SelectedAdminID" class="form-control">
                     </select>
                     <span class="text-danger" id="SelectedAdminID_error" style="display:none;"></span>
+                </div>
+                <div class="col-4" style="margin-left:198px !important">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="SelectedUserRoleID" id="UserRoleUser" value="1">
+                        <label class="form-check-label" for="UserRoleUser">
+                            User
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="SelectedUserRoleID" id="UserRoleAdmin" value="4">
+                        <label class="form-check-label" for="UserRoleAdmin">
+                            Admin
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="SelectedUserRoleID" id="UserRoleHR" value="3">
+                        <label class="form-check-label" for="UserRoleHR">
+                            HR
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="row">

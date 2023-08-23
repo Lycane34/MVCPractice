@@ -5,10 +5,10 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="7e3455a212d542e6a8b0d93eb5b94aad" Name="Diagram1">
-        <EntityTypeShape EntityType="LocalDBModel.LegalHolidayDates" Width="1.5" PointX="0.875" PointY="1.75" />
-        <EntityTypeShape EntityType="LocalDBModel.Users" Width="1.5" PointX="5.375" PointY="4.75" />
-        <EntityTypeShape EntityType="LocalDBModel.User_AnnualLeaves" Width="1.5" PointX="0.75" PointY="4.75" />
-        <EntityTypeShape EntityType="LocalDBModel.AnnualLeaveRequests" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="LocalDBModel.AnnualLeaveRequests" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LocalDBModel.LegalHolidayDates" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LocalDBModel.User_AnnualLeaves" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="LocalDBModel.Users" Width="1.5" PointX="4.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

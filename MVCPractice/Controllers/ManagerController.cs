@@ -119,6 +119,24 @@ namespace MVCPractice.Controllers
                 return Json(new { success = false, message = "Request not found or already confirmed." });
             }
         }
+        private int CalculateWeekdays(DateTime startDate, DateTime endDate, List<DateTime> holidays)
+        {
+            int weekdays = 0;
+            DateTime currentDate = startDate;
+
+            while (currentDate <= endDate)
+            {
+                if (currentDate.DayOfWeek != DayOfWeek.Saturday &&
+                    currentDate.DayOfWeek != DayOfWeek.Sunday &&
+                    !holidays.Contains(currentDate.Date))
+                {
+                    weekdays++;
+                }
+                currentDate = currentDate.AddDays(1);
+            }
+
+            return weekdays;
+        }
 
 
         [HttpPost]
@@ -138,17 +156,44 @@ namespace MVCPractice.Controllers
                                   Days = ALR.Days,
                                   WorkDays = ALR.WorkDays,
                                   AnnualYears = ALR.AnnualYear,
+                                  TotalAnnualDays = ALR.TotalAnnualDays
                               }).ToList();
 
             var requestToConfirm = userRequest.FirstOrDefault();
 
             if (requestToConfirm != null)
             {
+
+                var overlappingRequests = LDE.AnnualLeaveRequests.Where(r =>
+                r.UserID == requestToConfirm.UserID &&
+                r.Status == 1 &&
+                r.ID != id &&
+                (r.GoingDate <= requestToConfirm.ReturnDate && r.ReturnDate >= requestToConfirm.GoingDate)
+                ).ToList();
+                var holidays = LDE.LegalHolidayDates.ToList();
+
+                var holidayDates = holidays
+               .SelectMany(h => Enumerable.Range(0, (int)(h.HolidayFinishDate - h.HolidayStartDate).TotalDays + 1)
+               .Select(offset => h.HolidayStartDate.AddDays(offset)))
+               .ToList();
+                var totalWorkDays = CalculateWeekdays(requestToConfirm.GoingDate, requestToConfirm.ReturnDate, holidayDates);
+                var overlappingWorkDays = overlappingRequests.Sum(r => r.WorkDays);
+                var totalWorkDaysExcludingOverlapping = totalWorkDays - overlappingWorkDays;
+
+                foreach (var overlappingRequest in overlappingRequests)
+                {
+                    overlappingRequest.TotalAnnualDays -= overlappingRequest.WorkDays;
+                    overlappingRequest.TotalAnnualDays += overlappingRequest.WorkDays - overlappingWorkDays;
+                    overlappingRequest.WorkDays -= overlappingRequest.WorkDays;
+                }
+
+
                 User_AnnualLeaves annualLeaves = new User_AnnualLeaves();
                 var adminUserIdClaim = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
                 int adminUserId = int.Parse(adminUserIdClaim.Value);
                 requestToConfirm.Status = 1;
                 var xd = LDE.AnnualLeaveRequests.Find(requestToConfirm.ID);
+                xd.TotalAnnualDays -= overlappingWorkDays;
                 xd.Status = 1;
                 annualLeaves.UserID = requestToConfirm.UserID;
                 annualLeaves.TypeID = 1;

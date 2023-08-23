@@ -59,7 +59,7 @@ namespace MVCPractice.Controllers
         {
             if (LDE.User_AnnualLeaves.Any(m => m.UserID == id))
             {
-                var AnnualDaysUsed = LDE.User_AnnualLeaves.Where(m => m.UserID == id).Sum(m => m.TotalWorkDay);
+                var AnnualDaysUsed = LDE.User_AnnualLeaves.Where(m => m.UserID == id && m.Status == 1).Sum(m => m.TotalWorkDay);
                 return AnnualDaysUsed;
             }
             else
@@ -67,14 +67,28 @@ namespace MVCPractice.Controllers
                 return 0;
             }
 
-            
-        }
 
-        private int CalculateDaysUsed(DateTime goingDate, DateTime returnDate)
+        }
+        private string CalculateOverallStatus(User_A_RViewModel userViewModels)
         {
-            TimeSpan difference = returnDate - goingDate;
-            int daysDifference = (int)difference.TotalDays;
-            return daysDifference;
+            bool hasPendingRequests = userViewModels.Status.Equals(0);
+            bool hasApprovedRequests = userViewModels.Status.Equals(1);
+            bool hasRejectedRequests = userViewModels.Status.Equals(99);
+
+            if (hasPendingRequests)
+            {
+                return "Onay Bekliyor";
+            }
+            else if (hasApprovedRequests && !hasPendingRequests)
+            {
+                return "Onaylandı";
+            }
+            else if (hasRejectedRequests && !hasPendingRequests && !hasApprovedRequests)
+            {
+                return "Reddedildi";
+            }
+
+            return string.Empty;
         }
 
         [HttpGet]
@@ -85,8 +99,8 @@ namespace MVCPractice.Controllers
             var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
             int userId = int.Parse(userIdClaim.Value);
             var userData = (from U in LDE.Users
-                            join A in LDE.User_AnnualLeaves on U.ID equals A.UserID
-                            where U.ID == userId && A.Status != 99
+                            join A in LDE.AnnualLeaveRequests on U.ID equals A.UserID
+                            where U.ID == userId
                             select new
                             {
                                 User = U,
@@ -102,10 +116,15 @@ namespace MVCPractice.Controllers
 
             var user = userData.Select(u =>
             {
+
                 var yearsWorked = CalculateYearsWorked(u.User.JobStartDate, DateTime.Now);
-                var totalDays = CalculateWeekdays(u.AnnualLeave.GoingDate, u.AnnualLeave.ReturnDate, holidayDates);
+                int totalDays;
                 var annualDaysUsed = CalculateAnnualDaysUsed(u.User.ID);
-                var numberOfDays = CalculateDaysUsed(u.AnnualLeave.GoingDate, u.AnnualLeave.ReturnDate);
+                var totalWorkDays = CalculateWeekdays(u.AnnualLeave.GoingDate, u.AnnualLeave.ReturnDate, holidayDates);
+
+
+                var StatusMsg = string.Empty;
+
 
                 if (yearsWorked <= 5)
                 {
@@ -115,7 +134,9 @@ namespace MVCPractice.Controllers
                 {
                     totalDays = 14 * 5 + 20 * (yearsWorked - 5);
                 }
-                
+
+
+
                 return new User_A_RViewModel
                 {
                     Name = u.User.Name + " " + u.User.Surname,
@@ -123,16 +144,21 @@ namespace MVCPractice.Controllers
                     ReturnDate = u.AnnualLeave.ReturnDate,
                     Description = u.AnnualLeave.Description,
                     YearsWorked = yearsWorked,
-                    NumberOfDays = numberOfDays +1,
+                    TotalWorkDays = totalWorkDays,
+                    Status = u.AnnualLeave.Status,
                     TotalDays = totalDays,
+                    StatusMsg = StatusMsg,
                     AnnualDayUsed = annualDaysUsed,
-                    AnnualDayLeft = totalDays - annualDaysUsed,
                 };
             }).ToList();
 
 
+            foreach (var userViewModel in user)
+            {
+                userViewModel.StatusMsg = CalculateOverallStatus(userViewModel);
+            }
 
-            
+
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(user);
 
             return json;
@@ -146,7 +172,7 @@ namespace MVCPractice.Controllers
             var userIdClaim = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
             int userId = int.Parse(userIdClaim.Value);
             var errorMessages = new List<string>();
-            
+
 
             if (ALRModel.RequestGoingDate == DateTime.MinValue)
             {
@@ -185,7 +211,7 @@ namespace MVCPractice.Controllers
                  .Select(offset => h.HolidayStartDate.AddDays(offset)))
                  .ToList();
 
-            var TotalWorkDays = CalculateWeekdays(ALRModel.RequestGoingDate, ALRModel.RequestReturnDate,holidayDates);
+            var TotalWorkDays = CalculateWeekdays(ALRModel.RequestGoingDate, ALRModel.RequestReturnDate, holidayDates);
             var totalDays = 0;
             var yearsWorked = CalculateYearsWorked(LDE.Users.Find(userId).JobStartDate, DateTime.Now);
 
@@ -204,7 +230,6 @@ namespace MVCPractice.Controllers
             }
 
             var daysUsed = CalculateAnnualDaysUsed(userId);
-            totalDays -= TotalWorkDays;
 
             ALR.UserID = userId;
             ALR.GoingDate = ALRModel.RequestGoingDate;
@@ -212,7 +237,7 @@ namespace MVCPractice.Controllers
             ALR.Description = ALRModel.RequestDescription;
             ALR.AnnualYear = yearsWorked;
             ALR.TotalAnnualDays = totalDays;
-            ALR.Days = (ALRModel.RequestReturnDate - ALRModel.RequestGoingDate).Days +1;
+            ALR.Days = (ALRModel.RequestReturnDate - ALRModel.RequestGoingDate).Days + 1;
             ALR.WorkDays = TotalWorkDays;
             ALR.CreateDate = DateTime.Now;
             ALR.Status = 0;

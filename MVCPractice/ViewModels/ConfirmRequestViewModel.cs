@@ -18,5 +18,6 @@ namespace MVCPractice.ViewModels
         public int Days { get; set; }
         public int WorkDays { get; set; }
         public int AnnualYears { get; set; }
+        public int TotalAnnualDays { get; set; }
     }
 }
