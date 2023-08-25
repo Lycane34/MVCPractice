@@ -58,7 +58,7 @@
                 <th>İzin Başlangıç Tarihi</th>
                 <th>İzin Bitiş Tarihi</th>
                 <th>Açıklama</th>
-                <th>Toplam İzin Hakkı</th>
+                <th>Kalan İzin Hakkı</th>
                 <th>Kullanılan İzin Günü Sayısı</th>
                 <th>Durum</th>
             </tr>
@@ -152,6 +152,7 @@
             dataType: "json",
             success: function (data) {
                 console.log(data)
+                debugger
                 $('#EmployeeTable').DataTable({
 
                     data: data,
@@ -180,6 +181,9 @@
 
             }
         })
+    }
+    function UsedAnnualDayCalculator(TotalDays, TotalWorkDays) {
+        return TotalDays - TotalWorkDays;
     }
     function getStatusLabel(status) {
         switch (status) {

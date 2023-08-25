@@ -75,7 +75,6 @@
             dataType: "json",
             success: function (data) {
                 console.log(data);
-                debugger
                 $('#UsersTable').DataTable({
                     data: data,
                     columns: [
@@ -159,6 +158,7 @@
             success: function (data) {
                 $('#RequestPopupTable').DataTable({
                     data: data,
+                    
                     columns: [
                         { 'data': 'Name' },
                         {

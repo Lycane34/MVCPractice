@@ -55,20 +55,10 @@ namespace MVCPractice.Controllers
             return years;
         }
 
-        private int CalculateAnnualDaysUsed(int id)
-        {
-            if (LDE.User_AnnualLeaves.Any(m => m.UserID == id))
-            {
-                var AnnualDaysUsed = LDE.User_AnnualLeaves.Where(m => m.UserID == id && m.Status == 1).Sum(m => m.TotalWorkDay);
-                return AnnualDaysUsed;
-            }
-            else
-            {
-                return 0;
-            }
 
 
-        }
+
+
         private string CalculateOverallStatus(User_A_RViewModel userViewModels)
         {
             bool hasPendingRequests = userViewModels.Status.Equals(0);
@@ -119,7 +109,6 @@ namespace MVCPractice.Controllers
 
                 var yearsWorked = CalculateYearsWorked(u.User.JobStartDate, DateTime.Now);
                 int totalDays;
-                var annualDaysUsed = CalculateAnnualDaysUsed(u.User.ID);
                 var totalWorkDays = CalculateWeekdays(u.AnnualLeave.GoingDate, u.AnnualLeave.ReturnDate, holidayDates);
 
 
@@ -144,11 +133,10 @@ namespace MVCPractice.Controllers
                     ReturnDate = u.AnnualLeave.ReturnDate,
                     Description = u.AnnualLeave.Description,
                     YearsWorked = yearsWorked,
-                    TotalWorkDays = totalWorkDays,
+                    TotalWorkDays = u.AnnualLeave.WorkDays,
+                    TotalDays = u.AnnualLeave.TotalAnnualDays,
                     Status = u.AnnualLeave.Status,
-                    TotalDays = totalDays,
                     StatusMsg = StatusMsg,
-                    AnnualDayUsed = annualDaysUsed,
                 };
             }).ToList();
 
@@ -211,34 +199,86 @@ namespace MVCPractice.Controllers
                  .Select(offset => h.HolidayStartDate.AddDays(offset)))
                  .ToList();
 
+
             var TotalWorkDays = CalculateWeekdays(ALRModel.RequestGoingDate, ALRModel.RequestReturnDate, holidayDates);
-            var totalDays = 0;
             var yearsWorked = CalculateYearsWorked(LDE.Users.Find(userId).JobStartDate, DateTime.Now);
 
+            var overlappingRequests = LDE.AnnualLeaveRequests
+                .Where(r =>
+                    r.UserID == userId &&
+                    (r.Status == 0 || r.Status == 1 || r.Status == 99) &&
+                    (r.GoingDate <= ALRModel.RequestReturnDate && r.ReturnDate >= ALRModel.RequestGoingDate))
+                .ToList();
 
-            if (yearsWorked <= 5)
+            var overlappingWorkDays = overlappingRequests.Sum(r =>
             {
-                totalDays = 14 * yearsWorked;
+                if (r.Status == 99)
+                {
+                    return 0;
+                }
+                else if (r.GoingDate >= ALRModel.RequestGoingDate && r.ReturnDate <= ALRModel.RequestReturnDate)
+                {
+                    return r.WorkDays;
+                }
+                else if (r.GoingDate >= ALRModel.RequestGoingDate)
+                {
+                    return CalculateWeekdays(r.GoingDate, ALRModel.RequestReturnDate, holidayDates);
+                }
+                else if (r.ReturnDate <= ALRModel.RequestReturnDate)
+                {
+                    return CalculateWeekdays(ALRModel.RequestGoingDate, r.ReturnDate, holidayDates);
+                }
+                else
+                {
+                    return 0;
+                }
+            });
+
+            var totalWorkDaysExcludingOverlapping = TotalWorkDays - overlappingWorkDays;
+
+            if (totalWorkDaysExcludingOverlapping < 0)
+            {
+                totalWorkDaysExcludingOverlapping = 0;
+            }
+
+            var userAnnualLeaveRequests = LDE.AnnualLeaveRequests.Where(m => m.UserID == userId);
+
+
+
+            if (LDE.AnnualLeaveRequests.Where(m => m.UserID == userId).Any()== false)
+            {
+                if (yearsWorked <= 5)
+                {
+                    ALR.TotalAnnualDays = 14 * yearsWorked;
+                }
+                else
+                {
+                    ALR.TotalAnnualDays = 14 * 5 + 20 * (yearsWorked - 5);
+                }
+
             }
             else
             {
-                totalDays = 14 * 5 + 20 * (yearsWorked - 5);
+                ALR.TotalAnnualDays = LDE.AnnualLeaveRequests.Select(m => m.TotalAnnualDays).Min();
+
             }
-            if (totalDays < TotalWorkDays)
+
+           
+
+            if (ALR.TotalAnnualDays < TotalWorkDays)
             {
                 return Json(new { success = false, message = errorMessages });
             }
 
-            var daysUsed = CalculateAnnualDaysUsed(userId);
+
 
             ALR.UserID = userId;
             ALR.GoingDate = ALRModel.RequestGoingDate;
             ALR.ReturnDate = ALRModel.RequestReturnDate;
             ALR.Description = ALRModel.RequestDescription;
             ALR.AnnualYear = yearsWorked;
-            ALR.TotalAnnualDays = totalDays;
             ALR.Days = (ALRModel.RequestReturnDate - ALRModel.RequestGoingDate).Days + 1;
-            ALR.WorkDays = TotalWorkDays;
+            ALR.WorkDays = totalWorkDaysExcludingOverlapping;
             ALR.CreateDate = DateTime.Now;
             ALR.Status = 0;
             LDE.AnnualLeaveRequests.Add(ALR);
