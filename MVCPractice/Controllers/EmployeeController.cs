@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
@@ -271,6 +273,28 @@ namespace MVCPractice.Controllers
             }
 
 
+            var user = LDE.Users.Find(userId);
+            var AdminEmail = LDE.Users.Find(user.AdminID).EmailAddress;
+
+            MailMessage mail = new MailMessage();
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com",587);
+            mail.From = new MailAddress("sezkingnurullah@gmail.com");
+            mail.To.Add(AdminEmail);
+            mail.Subject = user.Name + " " + user.Surname + " - İzin Talebi";
+
+            if(ALRModel.RequestGoingDate == ALRModel.RequestReturnDate)
+            {
+                mail.Body = "Merhabalar, " + ALRModel.RequestGoingDate.Date + " tarihinde " + totalWorkDaysExcludingOverlapping + " iş günü izin kullanmak istiyorum. \nİzin Açıklaması:" + ALR.Description;
+            }
+            else
+            {
+                mail.Body = "Merhabalar, " + ALRModel.RequestGoingDate.Date + "-"+ ALRModel.RequestReturnDate.Date +" tarihleri arasında " + totalWorkDaysExcludingOverlapping + " iş günü izin kullanmak istiyorum. \nİzin Açıklaması:" + ALR.Description;
+            }
+
+            smtpClient.Credentials = new NetworkCredential("sezkingnurullah@gmail.com", "edsdtheaqplkzcwn");
+            smtpClient.EnableSsl = true;
+
+            //smtpClient.Send(mail);
 
             ALR.UserID = userId;
             ALR.GoingDate = ALRModel.RequestGoingDate;

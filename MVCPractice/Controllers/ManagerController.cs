@@ -95,6 +95,7 @@ namespace MVCPractice.Controllers
                                    Status = ALR.Status,
                                    Days = ALR.Days,
                                    WorkDays = ALR.WorkDays,
+                                   TotalAnnualDays = ALR.TotalAnnualDays,
                                    AnnualYears = ALR.AnnualYear,
                                }).ToList();
 
@@ -225,7 +226,7 @@ namespace MVCPractice.Controllers
         {
             var userRequest = (from u in LDE.Users
                                join ALR in LDE.AnnualLeaveRequests on u.ID equals ALR.UserID
-                               where ALR.Status == 0
+                               where ALR.Status == 0 && ALR.UserID == id
                                select new ConfirmRequestViewModel
                                {
                                    ID = ALR.ID,
@@ -241,21 +242,21 @@ namespace MVCPractice.Controllers
                                }).ToList();
 
             var requestToConfirm = userRequest.FirstOrDefault();
-
+            
             if (requestToConfirm != null)
             {
 
 
 
 
-
+                
 
                 User_AnnualLeaves annualLeaves = new User_AnnualLeaves();
                 var adminUserIdClaim = ((ClaimsIdentity)User.Identity).FindFirst("UserId");
                 int adminUserId = int.Parse(adminUserIdClaim.Value);
                 requestToConfirm.Status = 1;
                 var xd = LDE.AnnualLeaveRequests.Find(requestToConfirm.ID);
-                var minTotalAnnualDay = LDE.AnnualLeaveRequests.Where(m => m.UserID == requestToConfirm.UserID).Select(m => m.TotalAnnualDays).Min();
+                var minTotalAnnualDay = LDE.AnnualLeaveRequests.Where(m => m.UserID == id).Min(m => m.TotalAnnualDays);
                 xd.Status = 1;
                 minTotalAnnualDay -= requestToConfirm.WorkDays;
                 xd.TotalAnnualDays = minTotalAnnualDay;

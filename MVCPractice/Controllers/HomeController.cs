@@ -97,7 +97,6 @@ namespace MVCPractice.Controllers
                              Description = a.Description,
                              Status = a.Status,
                          }).OrderByDescending(m => m.GoingDate).ToList();
-            List<Local_User> newUsers = new List<Local_User>();
 
             
 

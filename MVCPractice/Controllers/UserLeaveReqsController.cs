@@ -37,6 +37,7 @@ namespace MVCPractice.Controllers
                          m.a.GoingDate >= FDOTY)
                          select new User_A_RViewModel
                          {
+
                              ID = Grup1.FirstOrDefault().u.ID,
                              Name = Grup1.FirstOrDefault().u.Name + " " + Grup1.FirstOrDefault().u.Surname,
                              JobStartDate = Grup1.FirstOrDefault().u.JobStartDate,
@@ -97,7 +98,6 @@ namespace MVCPractice.Controllers
                              Description = a.Description,
                              Status = a.Status,
                          }).OrderByDescending(m => m.GoingDate).ToList();
-            List<Local_User> newUsers = new List<Local_User>();
 
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(oTest);
